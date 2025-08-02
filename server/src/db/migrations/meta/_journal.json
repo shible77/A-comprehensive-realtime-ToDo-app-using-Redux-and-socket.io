@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1753956340158,
+      "tag": "0000_brainy_the_hand",
+      "breakpoints": true
+    }
+  ]
+}
