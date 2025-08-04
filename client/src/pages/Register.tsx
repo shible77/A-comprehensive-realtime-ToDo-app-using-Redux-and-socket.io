@@ -2,12 +2,14 @@ import { useState } from "react";
 import api from "../services/api";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/authSlice";
+import { useNavigate } from "react-router-dom";
 
-export default function Register({ onSwitch }: { onSwitch: () => void }) {
+export default function Register() {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async () => {
     try {
@@ -43,7 +45,7 @@ export default function Register({ onSwitch }: { onSwitch: () => void }) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button className="bg-green-500 text-white p-2 rounded" onClick={handleRegister}>Register</button>
-      <button className="text-sm underline" onClick={onSwitch}>Already have an account? Login</button>
+      <button className="text-sm underline" onClick={() => {navigate('/login')}}>Already have an account? Login</button>
     </div>
   );
 }

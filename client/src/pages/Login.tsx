@@ -2,15 +2,18 @@ import { useState } from "react";
 import api from "../services/api";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/authSlice";
+import { useNavigate } from "react-router-dom";
 
-export default function Login({ onSwitch }: { onSwitch: () => void }) {
+export default function Login() {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const res = await api.post("/auth/login", { email, password });
+      navigate("/");
       dispatch(setCredentials(res.data));
     } catch {
       alert("Login failed");
@@ -34,7 +37,7 @@ export default function Login({ onSwitch }: { onSwitch: () => void }) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button className="bg-blue-500 text-white p-2 rounded" onClick={handleLogin}>Login</button>
-      <button className="text-sm underline" onClick={onSwitch}>Don't have an account? Register</button>
+      <button className="text-sm underline" onClick={() => {navigate('/register')}}>Don't have an account? Register</button>
     </div>
   );
 }

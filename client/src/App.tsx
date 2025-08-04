@@ -1,12 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { socket } from "./services/socket";
-import { useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTodo, updateTodo, deleteTodo } from "./features/todoSlice";
 import { type RootState } from "./app/store";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 function App() {
   const dispatch = useDispatch();
 
@@ -23,16 +28,15 @@ function App() {
   }, []);
 
   const token = useSelector((state: RootState) => state.auth.token);
-  const [showRegister, setShowRegister] = useState(false);
-
-  if (!token) {
-    return showRegister
-      ? <Register onSwitch={() => setShowRegister(false)} />
-      : <Login onSwitch={() => setShowRegister(true)} />;
-  }
 
   return (
-    <Home />
+    <Router>
+      <Routes>
+        <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
 }
 
