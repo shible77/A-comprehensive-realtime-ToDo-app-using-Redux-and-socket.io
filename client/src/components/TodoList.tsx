@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { type RootState } from "../app/store";
 import api from "../services/api";
+import { DynamicIcon } from "lucide-react/dynamic";
 
 export default function TodoList() {
   const todos = useSelector((state: RootState) => state.todos);
@@ -40,7 +41,9 @@ export default function TodoList() {
           >
             {todo.title}
           </div>
-          <button className="text-red-500" onClick={() => removeTodo(todo.id)}>✖</button>
+          <button className="text-red-500" onClick={() => removeTodo(todo.id)}>
+            <DynamicIcon name="trash" color="red" size={20} className="cursor-pointer" />
+          </button>
         </li>
       ))}
     </ul>

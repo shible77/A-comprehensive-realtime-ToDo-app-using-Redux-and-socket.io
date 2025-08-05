@@ -1,6 +1,6 @@
 import { useState } from "react";
 import api from "../services/api";
-
+import { DynamicIcon } from "lucide-react/dynamic";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Register() {
@@ -8,6 +8,8 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handleRegister = async () => {
     try {
@@ -30,7 +32,7 @@ export default function Register() {
         <input
           type="email"
           id="email-input"
-          className="border p-2"
+          className="border rounded h-10 p-2 focus:outline-blue-400 focus:rounded focus:outline-1 focus:border-0"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -38,21 +40,27 @@ export default function Register() {
         <input
           type="text"
           id="username-input"
-          className="border p-2"
+          className="border rounded h-10 p-2 focus:outline-blue-400 focus:rounded focus:outline-1 focus:border-0"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <input
-          type="password"
-          id="password-input"
-          className="border p-2"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+ 
+        <div className="flex w-full border h-10 rounded p-2 focus-within:border-blue-400 focus-within:rounded focus-within:border-1">
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password-input"
+            className="w-11/12 justify-center focus:outline-none"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="flex w-1/12 justify-center items-center focus:outline-none" onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <DynamicIcon name="eye-off" color="black" size={20} className="cursor-pointer"/> : <DynamicIcon name="eye" color="black" size={20} className="cursor-pointer"/>}
+          </button>
+        </div>
         <button
-          className="bg-green-500 text-white p-2 rounded hover:bg-green-700"
+          className="bg-green-500 text-white p-2 rounded hover:bg-green-700 cursor-pointer"
           onClick={handleRegister}
         >
           Register

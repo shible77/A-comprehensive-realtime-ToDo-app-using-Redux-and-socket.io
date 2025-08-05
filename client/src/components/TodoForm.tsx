@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../services/api";
+import { DynamicIcon } from "lucide-react/dynamic";
 
 export default function TodoForm() {
   const [title, setTitle] = useState("");
@@ -11,16 +12,18 @@ export default function TodoForm() {
   };
 
   return (
-    <div className="flex gap-2 mb-4">
+    <div className="flex w-full gap-1 mb-4">
       <input
         type="text"
         id="todo-input"
-        className="border p-2 flex-1"
+        className="flex w-[90%] border p-2 rounded"
         placeholder="Add new todo..."
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <button className="bg-blue-500 text-white px-4 rounded" onClick={addTodo}>Add</button>
+      <button className="flex w-[10%] justify-center items-center bg-blue-500 text-white rounded cursor-pointer" onClick={addTodo}>
+        <DynamicIcon name="plus" color="white" size={20} />
+      </button>
     </div>
   );
 }

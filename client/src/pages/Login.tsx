@@ -3,11 +3,14 @@ import api from "../services/api";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/authSlice";
 import { useNavigate, Link } from "react-router-dom";
+import { DynamicIcon } from 'lucide-react/dynamic';
+
 
 export default function Login() {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -15,7 +18,6 @@ export default function Login() {
       const res = await api.post("/auth/login", { email, password });
       dispatch(setCredentials(res.data));
       navigate("/");
-
     } catch {
       alert("Login failed");
     }
@@ -28,21 +30,26 @@ export default function Login() {
         <input
           type="email"
           id="email-input"
-          className="border p-2"
+          className="border rounded h-10 p-2 focus:outline-blue-400 focus:rounded focus:outline-1 focus:border-0"
           placeholder="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
-          type="password"
-          id="password-input"
-          className="border p-2"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="flex w-full border h-10 rounded p-2 focus-within:border-blue-400 focus-within:rounded focus-within:border-1">
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password-input"
+            className="w-11/12 justify-center focus:outline-none"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="flex w-1/12 justify-center items-center focus:outline-none" onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <DynamicIcon name="eye-off" color="black" size={20} className="cursor-pointer"/> : <DynamicIcon name="eye" color="black" size={20} className="cursor-pointer"/>}
+          </button>
+        </div>
         <button
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 cursor-pointer"
           onClick={handleLogin}
         >
           Login
