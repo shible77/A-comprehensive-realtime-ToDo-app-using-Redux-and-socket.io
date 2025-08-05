@@ -5,6 +5,7 @@ import { db } from "../db/setup";
 import { generateToken } from "../utils/jwt";
 import { eq, or } from "drizzle-orm";
 import z from "zod";
+import { SessionRequest } from "../middlewares/verifySession";
 
 const registerBodySchema = z.object({
     email: z.email(),
@@ -48,16 +49,50 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Invalid password" });
         }
         const token = generateToken({userId: user[0].id});
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+        });
         return res.status(200).json({
-            message: "Login successful",
-            token,
-            userId: user[0].id,
+            status: "success",
+            user: {id: user[0].id, username: user[0].username, email: user[0].email},
         });
 
     }catch( error ){
         if (error instanceof z.ZodError) {
             return res.status(400).json({ name: "Invalid data type.", message: JSON.parse(error.message) });
         }
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const logout = async (req: SessionRequest, res: Response) => {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+        });
+        return res.status(200).json({ status: "success" });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const getUser = async (req: SessionRequest, res: Response) => {
+    try {
+        const userId = req.userId;
+        
+        const user = await db.select().from(users).where(eq(users.id, userId!)).limit(1);
+        if (user.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        return res.status(200).json({
+            status: "success",
+            user: { id: user[0].id, username: user[0].username, email: user[0].email },
+        });
+    } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }
 }

@@ -1,7 +1,5 @@
 import { useEffect } from "react";
-import { socket } from "./services/socket";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodo, updateTodo, deleteTodo } from "./features/todoSlice";
 import { type RootState } from "./app/store";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -12,27 +10,32 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { setCredentials, logout } from "./features/authSlice";
+import api from "./services/api";
+
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    socket.on("todo:created", (todo) => dispatch(addTodo(todo)));
-    socket.on("todo:updated", (todo) => dispatch(updateTodo(todo)));
-    socket.on("todo:deleted", (todo) => dispatch(deleteTodo(todo)));
-
-    return () => {
-      socket.off("todo:created");
-      socket.off("todo:updated");
-      socket.off("todo:deleted");
+    const verifySession = async () => {
+      try {
+        const res = await api.get("/auth/user");
+        dispatch(setCredentials(res.data));
+      } catch {
+        dispatch(logout());
+      }
     };
+    if (document.cookie.includes("token")) {
+      verifySession();
+    }
   }, []);
 
-  const token = useSelector((state: RootState) => state.auth.token);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>

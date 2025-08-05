@@ -1,10 +1,13 @@
 import express from "express";
-import { register, login } from "../controllers/authController";
+import { register, login, logout, getUser } from "../controllers/authController";
+import verifySession from "../middlewares/verifySession";
 
 const authRoutes = express.Router();
 
 authRoutes.post("/register", register);
 authRoutes.post("/login", login);
+authRoutes.post("/logout", verifySession, logout)
+authRoutes.get("/user", verifySession, getUser)
 
 export default authRoutes;
 

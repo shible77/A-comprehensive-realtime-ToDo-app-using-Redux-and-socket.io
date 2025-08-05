@@ -5,6 +5,7 @@ import { Server } from "socket.io";
 import authRoutes from "./routes/authRoutes";
 import todoRoutes from "./routes/todoRoutes";
 import { socketHandler } from "./sockets/socketHandler";
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const server = http.createServer(app);
@@ -14,7 +15,13 @@ const io = new Server(server, {
 
 socketHandler(io);
 
-app.use(cors());
+app.use(cookieParser());
+app.use(cors(
+  {
+    origin: process.env.CLIENT_URL,
+    credentials: true
+  }
+));
 app.use(express.json());
 app.use((req: any, _, next) => { req.io = io; next(); });
 
