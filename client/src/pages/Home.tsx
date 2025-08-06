@@ -8,6 +8,7 @@ import TodoList from "../components/TodoList";
 import { logout } from "../features/authSlice";
 import { DynamicIcon } from "lucide-react/dynamic";
 import { showModal } from "../features/modalSlice";
+import { motion } from "motion/react";
 
 
 
@@ -44,8 +45,12 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-2 bg-gray-200">
-      <div className="flex w-full justify-between items-center mb-12 p-2 rounded bg-gray-300 shadow-xl">
+    <div className="flex flex-col items-center min-h-screen p-2 bg-gray-200 overflow-x-hidden">
+      <motion.div className="flex w-full justify-between items-center mb-12 p-2 rounded bg-gray-300 shadow-xl"
+        initial={{y:-200}}
+        animate={{y:0}}
+        transition={{delay: 0.2, type:"spring"}}
+      >
         <h1 className="flex flex-row items-center text-md font-bold text-gray-800 gap-x-1">
           <DynamicIcon name="circle-user-round" color="black" size={30}/>
           Welcome, {user.username}!
@@ -53,12 +58,16 @@ export default function Home() {
         <button className="flex justify-center items-center h-8 bg-blue-400 rounded-md w-20 min-w-20 hover:bg-blue-300 cursor-pointer transition-colors duration-300" onClick={() => dispatch(showModal({ title: "Log Out", type: "warning", message: "Are you sure to logout?", confirmAction: (() => {handleLogout()}) }))}>
           <DynamicIcon name="log-out" color="black" size={20} />
         </button>
-      </div>
-      <div className="w-5/6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-xl">
+      </motion.div>
+      <motion.div className="w-5/6 max-w-md mx-auto bg-white p-6 rounded-lg shadow-xl"
+        initial={{x:'200vh'}}
+        animate={{x:0}}
+        transition={{delay:0.8}}
+      >
         <h1 className="text-2xl font-bold mb-4 text-center">Your Todos</h1>
         <TodoForm />
         <TodoList />
-      </div>
+      </motion.div>
     </div>
   );
 }

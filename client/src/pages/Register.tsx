@@ -4,7 +4,7 @@ import { DynamicIcon } from "lucide-react/dynamic";
 import { useNavigate, Link } from "react-router-dom";
 import { showModal } from "../features/modalSlice";
 import { useDispatch } from "react-redux";
-
+import { easeInOut, motion } from "motion/react";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -15,12 +15,11 @@ export default function Register() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-      const setTitle = () => {
-        document.title = "ToDos | Register";
-      }
-      setTitle();
-    },[])
-
+    const setTitle = () => {
+      document.title = "ToDos | Register";
+    };
+    setTitle();
+  }, []);
 
   const handleRegister = async () => {
     try {
@@ -29,21 +28,23 @@ export default function Register() {
         username,
         password,
       });
-      if(res.status === 204) {
-        dispatch(showModal({
-          title: "Registration Failed",
-          message: "User already exists.",
-          type: "error",
-        }));
-      }
-      else{
+      if (res.status === 204) {
+        dispatch(
+          showModal({
+            title: "Registration Failed",
+            message: "User already exists.",
+            type: "error",
+          })
+        );
+      } else {
         navigate("/login");
       }
-    } catch{
+    } catch {
       dispatch(
         showModal({
           title: "Registration Error",
-          message: "An error occurred while trying to register. Please try again.",
+          message:
+            "An error occurred while trying to register. Please try again.",
           type: "error",
         })
       );
@@ -51,8 +52,13 @@ export default function Register() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-200 p-4">
-      <div className="flex flex-col w-5/6 max-w-full bg-white p-6 rounded-lg shadow-md space-y-3 md:w-1/2 ">
+    <div className="flex min-h-screen items-center justify-center bg-gray-200 p-4 overflow-hidden">
+      <motion.div
+        className="flex flex-col w-5/6 max-w-full bg-white p-6 rounded-lg shadow-md space-y-3 md:w-1/2 overflow-clip"
+        initial={{ x: "100vw" }}
+        animate={{ x: 0 }}
+        transition={{ delay: 0.3 }}
+      >
         <h2 className="text-xl font-bold text-center">Register</h2>
         <input
           type="email"
@@ -70,7 +76,7 @@ export default function Register() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
- 
+
         <div className="flex w-full border h-10 rounded p-2 focus-within:border-blue-400 focus-within:rounded focus-within:border-1">
           <input
             type={showPassword ? "text" : "password"}
@@ -80,8 +86,25 @@ export default function Register() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button className="flex w-1/12 justify-center items-center focus:outline-none" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <DynamicIcon name="eye-off" color="black" size={20} className="cursor-pointer"/> : <DynamicIcon name="eye" color="black" size={20} className="cursor-pointer"/>}
+          <button
+            className="flex w-1/12 justify-center items-center focus:outline-none"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <DynamicIcon
+                name="eye-off"
+                color="black"
+                size={20}
+                className="cursor-pointer"
+              />
+            ) : (
+              <DynamicIcon
+                name="eye"
+                color="black"
+                size={20}
+                className="cursor-pointer"
+              />
+            )}
           </button>
         </div>
         <button
@@ -96,7 +119,7 @@ export default function Register() {
             Login
           </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
