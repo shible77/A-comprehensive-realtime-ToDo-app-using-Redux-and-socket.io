@@ -3,8 +3,8 @@ import api from "../services/api";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/authSlice";
 import { useNavigate, Link } from "react-router-dom";
-import { DynamicIcon } from 'lucide-react/dynamic';
-
+import { DynamicIcon } from "lucide-react/dynamic";
+import { showModal } from "../features/modalSlice";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -19,7 +19,13 @@ export default function Login() {
       dispatch(setCredentials(res.data));
       navigate("/");
     } catch {
-      alert("Login failed");
+      dispatch(
+        showModal({
+          title: "Login Failed",
+          message: "Incorrect email or password.",
+          type: "error",
+        })
+      );
     }
   };
 
@@ -44,8 +50,25 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button className="flex w-1/12 justify-center items-center focus:outline-none" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <DynamicIcon name="eye-off" color="black" size={20} className="cursor-pointer"/> : <DynamicIcon name="eye" color="black" size={20} className="cursor-pointer"/>}
+          <button
+            className="flex w-1/12 justify-center items-center focus:outline-none"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <DynamicIcon
+                name="eye-off"
+                color="black"
+                size={20}
+                className="cursor-pointer"
+              />
+            ) : (
+              <DynamicIcon
+                name="eye"
+                color="black"
+                size={20}
+                className="cursor-pointer"
+              />
+            )}
           </button>
         </div>
         <button
