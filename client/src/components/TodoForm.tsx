@@ -21,7 +21,7 @@ export default function TodoForm() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <button className="flex w-[10%] justify-center items-center bg-blue-500 text-white rounded cursor-pointer" onClick={addTodo}>
+      <button className="flex w-[10%] justify-center items-center bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer transition-colors duration-300" onClick={addTodo}>
         <DynamicIcon name="plus" color="white" size={20} />
       </button>
     </div>

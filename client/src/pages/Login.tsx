@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../services/api";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/authSlice";
@@ -12,17 +12,33 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
+  useEffect(() => {
+    const setTitle = () => {
+      document.title = "ToDos | Login";
+    }
+    setTitle();
+  },[])
   const handleLogin = async () => {
     try {
       const res = await api.post("/auth/login", { email, password });
-      dispatch(setCredentials(res.data));
-      navigate("/");
+      if (res.status === 204) {
+        dispatch(
+          showModal({
+            title: "Login Failed",
+            message: "Incorrect email or password.",
+            type: "error",
+          })
+        );
+      } else {
+        dispatch(setCredentials(res.data));
+        navigate("/");
+      }
     } catch {
       dispatch(
         showModal({
-          title: "Login Failed",
-          message: "Incorrect email or password.",
+          title: "Login Error",
+          message:
+            "An error occurred while trying to log in. Please try again.",
           type: "error",
         })
       );
@@ -72,7 +88,7 @@ export default function Login() {
           </button>
         </div>
         <button
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 cursor-pointer"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 cursor-pointer transition-colors duration-300"
           onClick={handleLogin}
         >
           Login

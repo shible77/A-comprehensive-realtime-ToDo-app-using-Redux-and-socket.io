@@ -8,11 +8,17 @@ export default function GlobalModal() {
 
   if (!isOpen) return null;
 
-  const typeColors = {
+  const bgTypeColors = {
     info: "bg-blue-500",
     warning: "bg-yellow-500",
     error: "bg-red-500",
   }[type];
+
+  const hoverBgColors = {
+    info: "hover:bg-blue-600",
+    warning: "hover:bg-yellow-600",
+    error: "hover:bg-red-600",
+  }[type]
 
   const handleClose = () => dispatch(hideModal());
 
@@ -25,14 +31,14 @@ export default function GlobalModal() {
         <p className="mb-4 text-gray-700">{message}</p>
         <div className="flex justify-end gap-2">
           <button
-            className={`px-4 py-2 ${typeColors} rounded hover:bg-red-600 cursor-pointer`}
+            className="px-4 py-2  bg-green-500 rounded  hover:bg-green-600 cursor-pointer transition-colors duration-300"
             onClick={handleClose}
           >
             Close
           </button>
           {confirmAction && (
             <button
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              className={`px-4 py-2 ${bgTypeColors}  text-black rounded ${hoverBgColors} cursor-pointer transition-colors duration-300`}
               onClick={() => {
                 confirmAction();
                 handleClose();

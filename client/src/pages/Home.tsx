@@ -7,6 +7,7 @@ import TodoForm from "../components/TodoForm";
 import TodoList from "../components/TodoList";
 import { logout } from "../features/authSlice";
 import { DynamicIcon } from "lucide-react/dynamic";
+import { showModal } from "../features/modalSlice";
 
 
 
@@ -14,6 +15,9 @@ export default function Home() {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
   useEffect(() => {
+    const setTitle = () => {
+      document.title = "ToDos | Home";
+    }
     const fetchTodos = async () => {
       try {
         const res = await api.get("/todos/get");
@@ -23,6 +27,7 @@ export default function Home() {
         console.error("Failed to fetch todos:", error);
       }
     };
+    setTitle();
     fetchTodos();
   }, []);
 
@@ -45,7 +50,7 @@ export default function Home() {
           <DynamicIcon name="circle-user-round" color="black" size={30}/>
           Welcome, {user.username}!
         </h1>
-        <button className="flex justify-center items-center h-8 bg-blue-400 rounded-md w-20 min-w-20 hover:bg-blue-300 cursor-pointer" onClick={handleLogout}>
+        <button className="flex justify-center items-center h-8 bg-blue-400 rounded-md w-20 min-w-20 hover:bg-blue-300 cursor-pointer transition-colors duration-300" onClick={() => dispatch(showModal({ title: "Log Out", type: "warning", message: "Are you sure to logout?", confirmAction: (() => {handleLogout()}) }))}>
           <DynamicIcon name="log-out" color="black" size={20} />
         </button>
       </div>

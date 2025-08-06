@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../services/api";
 import { DynamicIcon } from "lucide-react/dynamic";
 import { useNavigate, Link } from "react-router-dom";
+import { showModal } from "../features/modalSlice";
+import { useDispatch } from "react-redux";
+
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -9,19 +12,41 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+      const setTitle = () => {
+        document.title = "ToDos | Register";
+      }
+      setTitle();
+    },[])
 
 
   const handleRegister = async () => {
     try {
-      await api.post("/auth/register", {
+      const res = await api.post("/auth/register", {
         email,
         username,
         password,
       });
-      navigate("/login");
-    } catch (error) {
-      console.error("Registration failed:", error);
-      alert("Registration failed");
+      if(res.status === 204) {
+        dispatch(showModal({
+          title: "Registration Failed",
+          message: "User already exists.",
+          type: "error",
+        }));
+      }
+      else{
+        navigate("/login");
+      }
+    } catch{
+      dispatch(
+        showModal({
+          title: "Registration Error",
+          message: "An error occurred while trying to register. Please try again.",
+          type: "error",
+        })
+      );
     }
   };
 
@@ -60,7 +85,7 @@ export default function Register() {
           </button>
         </div>
         <button
-          className="bg-green-500 text-white p-2 rounded hover:bg-green-700 cursor-pointer"
+          className="bg-green-500 text-white p-2 rounded hover:bg-green-700 cursor-pointer transition-colors duration-300"
           onClick={handleRegister}
         >
           Register
