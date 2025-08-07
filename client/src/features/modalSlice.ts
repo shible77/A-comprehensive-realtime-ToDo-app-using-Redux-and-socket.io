@@ -5,7 +5,7 @@ interface ModalState {
   title: string;
   message: string;
   type: "info" | "warning" | "error";
-  confirmAction?: (() => void) | null;
+  actionId?: string;
 }
 
 const initialState: ModalState = {
@@ -13,7 +13,7 @@ const initialState: ModalState = {
   title: "",
   message: "",
   type: "info",
-  confirmAction: null,
+  actionId: undefined
 };
 
 const modalSlice = createSlice({
@@ -26,20 +26,20 @@ const modalSlice = createSlice({
         title: string;
         message: string;
         type?: "info" | "warning" | "error";
-        confirmAction?: () => void;
+        actionId?: string;
       }>
     ) => {
       state.isOpen = true;
       state.title = action.payload.title;
       state.message = action.payload.message;
       state.type = action.payload.type || "info";
-      state.confirmAction = action.payload.confirmAction || null;
+      state.actionId = action.payload.actionId;
     },
     hideModal: (state) => {
       state.isOpen = false;
       state.title = "";
       state.message = "";
-      state.confirmAction = null;
+      state.actionId = undefined;
     },
   },
 });

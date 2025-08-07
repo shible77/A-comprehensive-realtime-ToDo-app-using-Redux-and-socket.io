@@ -2,11 +2,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { type RootState } from "../app/store";
 import { hideModal } from "../features/modalSlice";
 import { motion, AnimatePresence } from "motion/react";
+import { runModalAction } from "../utils/modalActionRegistry";
 
 export default function GlobalModal() {
-  const { isOpen, title, message, type, confirmAction } = useSelector(
-    (state: RootState) => state.modal
-  );
+  const { isOpen, title, message, type, actionId  } = useSelector((state: RootState) => state.modal);
   const dispatch = useDispatch();
 
   const bgTypeColors = {
@@ -21,6 +20,10 @@ export default function GlobalModal() {
     error: "hover:bg-red-600",
   }[type];
 
+  const handleConfirm = () => {
+    runModalAction(actionId); // ✅ Lookup and call the function
+    dispatch(hideModal());
+  };
   const handleClose = () => dispatch(hideModal());
 
   return (
@@ -43,12 +46,11 @@ export default function GlobalModal() {
               >
                 Close
               </button>
-              {confirmAction && (
+              {actionId && (
                 <button
                   className={`px-4 py-2 ${bgTypeColors}  text-black rounded ${hoverBgColors} cursor-pointer transition-colors duration-300`}
                   onClick={() => {
-                    confirmAction();
-                    handleClose();
+                    handleConfirm()
                   }}
                 >
                   Confirm

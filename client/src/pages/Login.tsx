@@ -52,9 +52,31 @@ export default function Login() {
         className="flex flex-col w-5/6 max-w-full bg-white p-6 rounded-lg shadow-md space-y-3 md:w-1/2 overflow-clip"
         initial={{ x: "100vw" }}
         animate={{ x: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.3, type: "spring", stiffness: 120 }}
       >
-        <h2 className="text-xl font-bold text-center">Login</h2>
+        <motion.div
+          className="flex justify-center"
+          initial={{ x: "100vw" }}
+          animate={{ x: 0 }}
+          transition={{ delay: 0.6, type: "spring", stiffness: 120 }}
+        >
+          <motion.img
+            src="/login-form.jpg"
+            alt="Login"
+            height={200}
+            width={250}
+            whileHover={{
+              scale: 1.1,
+              rotateY: 360,
+              transition: {
+                duration: 1,
+                ease: "linear",
+                repeat: Infinity
+              },
+            }}
+          />
+        </motion.div>
+
         <input
           type="email"
           id="email-input"
@@ -93,12 +115,15 @@ export default function Login() {
             )}
           </button>
         </div>
-        <button
+        <motion.button
           className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 cursor-pointer transition-colors duration-300"
           onClick={handleLogin}
+          whileHover={{
+            boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)"
+          }}
         >
           Login
-        </button>
+        </motion.button>
         <p className="text-center">
           Don't have an account?{" "}
           <Link to="/register" className="text-blue-500 underline">
