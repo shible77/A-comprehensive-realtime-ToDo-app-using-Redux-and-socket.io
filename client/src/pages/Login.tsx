@@ -124,6 +124,9 @@ export default function Login() {
         >
           Login
         </motion.button>
+        <div className="flex justify-end">
+          <Link to="/forgot" className="text-blue-500">Forgot Password?</Link>
+        </div>
         <p className="text-center">
           Don't have an account?{" "}
           <Link to="/register" className="text-blue-500 underline">

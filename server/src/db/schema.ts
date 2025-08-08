@@ -1,4 +1,4 @@
-import { mysqlTable, int, varchar, boolean } from 'drizzle-orm/mysql-core';
+import { mysqlTable, int, varchar, boolean, timestamp } from 'drizzle-orm/mysql-core';
 
 export const users = mysqlTable('users', {
     id: int('id').primaryKey().autoincrement(),
@@ -13,3 +13,10 @@ export const todos = mysqlTable('todos', {
     title: varchar('title', { length: 255 }).notNull(),
     completed: boolean('completed').notNull().default(false),
 });
+
+export const otp = mysqlTable('otp', {
+    id: int('id').primaryKey().autoincrement(),
+    token : varchar('token', {length: 6}).notNull(),
+    userId: int('user_id').references(() => users.id).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull()
+})
