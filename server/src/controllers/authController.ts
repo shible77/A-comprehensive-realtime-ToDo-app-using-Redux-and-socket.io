@@ -18,7 +18,7 @@ export const register = async (req: Request, res: Response) => {
         const hashedPassword = await argon2.hash(password);
         const alreadyExists = await db.select().from(users).where(or(eq(users.email, email), eq(users.username, username)));
         if (alreadyExists.length > 0) {
-            return res.status(204).json({ message: "User already exists" });
+            return res.status(200).json({ message: "User already exists" });
         }
         const user = await db.insert(users).values({ email, username, password: hashedPassword }).$returningId();
         return res.status(201).json({
@@ -42,17 +42,17 @@ export const login = async (req: Request, res: Response) => {
         const { email, password } = loginBodySchema.parse(req.body);
         const user = await db.select().from(users).where(eq(users.email, email)).limit(1);
         if (user.length === 0) {
-            return res.status(204).json({ message: "User not found" });
+            return res.status(200).json({ message: "User not found" });
         }
         const isPasswordValid = await argon2.verify(user[0].password, password);
         if (!isPasswordValid) {
-            return res.status(204).json({ message: "Invalid password" });
+            return res.status(200).json({ message: "Invalid password" });
         }
         const token = generateToken({userId: user[0].id});
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
         });
         return res.status(200).json({
             status: "success",
@@ -72,7 +72,7 @@ export const logout = async (req: SessionRequest, res: Response) => {
         res.clearCookie("token", {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
         });
         return res.status(200).json({ status: "success" });
     } catch (error) {

@@ -9,6 +9,14 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 const server = http.createServer(app);
+
+app.use(cors(
+  {
+    origin: process.env.CLIENT_URL,
+    credentials: true
+  }
+));
+
 const io = new Server(server, {
   cors: { origin: process.env.CLIENT_URL! }
 });
@@ -16,12 +24,7 @@ const io = new Server(server, {
 socketHandler(io);
 
 app.use(cookieParser());
-app.use(cors(
-  {
-    origin: process.env.CLIENT_URL,
-    credentials: true
-  }
-));
+
 app.use(express.json());
 app.use((req: any, _, next) => { req.io = io; next(); });
 
