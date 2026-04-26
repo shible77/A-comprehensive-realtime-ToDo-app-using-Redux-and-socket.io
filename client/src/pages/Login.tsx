@@ -3,9 +3,18 @@ import api from "../services/api";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/authSlice";
 import { useNavigate, Link } from "react-router-dom";
-import { DynamicIcon } from "lucide-react/dynamic";
 import { showModal } from "../features/modalSlice";
 import { motion } from "motion/react";
+import AuthShell from "../components/auth/AuthShell";
+import AuthInput from "../components/auth/AuthInput";
+import {
+  ArrowRightIcon,
+  EyeIcon,
+  EyeOffIcon,
+  LockIcon,
+  MailIcon,
+  SparkIcon,
+} from "../components/icons/AuthIcons";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -47,93 +56,110 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-200 p-4 overflow-hidden">
-      <motion.div
-        className="flex flex-col w-5/6 max-w-full bg-white p-6 rounded-lg shadow-md space-y-3 md:w-1/2 overflow-clip"
-        initial={{ x: "100vw" }}
-        animate={{ x: 0 }}
-        transition={{ delay: 0.3, type: "spring", stiffness: 120 }}
-      >
+    <AuthShell>
+      <div className="space-y-8">
         <motion.div
-          className="flex justify-center"
-          initial={{ x: "100vw" }}
-          animate={{ x: 0 }}
-          transition={{ delay: 0.6, type: "spring", stiffness: 120 }}
+          className="space-y-4"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
         >
-          <motion.img
-            src="/login-form.jpg"
-            alt="Login"
-            height={200}
-            width={250}
-            whileHover={{
-              scale: 1.1,
-              rotateY: 360,
-              transition: {
-                duration: 1,
-                ease: "linear",
-                repeat: Infinity
-              },
-            }}
-          />
+          <div className="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1 text-sm font-medium text-sky-700">
+            <SparkIcon className="h-4 w-4" />
+            Sign in
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
+              Welcome back
+            </h2>
+            <p className="max-w-md text-sm leading-6 text-slate-600">
+              Log in to access your tasks, keep up with live updates, and stay
+              on top of what matters today.
+            </p>
+          </div>
         </motion.div>
 
-        <input
-          type="email"
-          id="email-input"
-          className="border rounded h-10 p-2 focus:outline-blue-400 focus:rounded focus:outline-1 focus:border-0"
-          placeholder="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <div className="flex w-full border h-10 rounded p-2 focus-within:border-blue-400 focus-within:rounded focus-within:border-1">
-          <input
+        <motion.div
+          className="space-y-5"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.08 }}
+        >
+          <AuthInput
+            label="Email"
+            icon={MailIcon}
+            type="email"
+            id="email-input"
+            name="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <AuthInput
+            label="Password"
+            icon={LockIcon}
             type={showPassword ? "text" : "password"}
             id="password-input"
-            className="w-11/12 justify-center focus:outline-none"
-            placeholder="Password"
+            name="password"
+            autoComplete="current-password"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            trailing={
+              <button
+                type="button"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+                onClick={() => setShowPassword((current) => !current)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOffIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+            }
           />
-          <button
-            className="flex w-1/12 justify-center items-center focus:outline-none"
-            onClick={() => setShowPassword(!showPassword)}
+
+          <div className="flex items-center justify-end">
+            <Link
+              to="/forgot"
+              className="text-sm font-medium text-sky-700 transition hover:text-sky-800"
+            >
+              Forgot password?
+            </Link>
+          </div>
+
+          <motion.button
+            type="button"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:bg-slate-800"
+            onClick={handleLogin}
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.99 }}
           >
-            {showPassword ? (
-              <DynamicIcon
-                name="eye-off"
-                color="black"
-                size={20}
-                className="cursor-pointer"
-              />
-            ) : (
-              <DynamicIcon
-                name="eye"
-                color="black"
-                size={20}
-                className="cursor-pointer"
-              />
-            )}
-          </button>
-        </div>
-        <motion.button
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 cursor-pointer transition-colors duration-300"
-          onClick={handleLogin}
-          whileHover={{
-            boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)"
-          }}
+            Login
+            <ArrowRightIcon className="h-4 w-4" />
+          </motion.button>
+        </motion.div>
+
+        <motion.div
+          className="border-t border-slate-200 pt-6 text-center text-sm text-slate-600"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.45, delay: 0.18 }}
         >
-          Login
-        </motion.button>
-        <div className="flex justify-end">
-          <Link to="/forgot" className="text-blue-500">Forgot Password?</Link>
-        </div>
-        <p className="text-center">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-blue-500 underline">
-            Register
+          Don&apos;t have an account?{" "}
+          <Link
+            to="/register"
+            className="font-semibold text-emerald-600 transition hover:text-emerald-700"
+          >
+            Create one
           </Link>
-        </p>
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
+    </AuthShell>
   );
 }

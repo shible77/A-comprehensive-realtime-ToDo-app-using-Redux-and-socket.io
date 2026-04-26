@@ -5,20 +5,30 @@ import { Server } from "socket.io";
 import authRoutes from "./routes/authRoutes";
 import todoRoutes from "./routes/todoRoutes";
 import { socketHandler } from "./sockets/socketHandler";
+import { errorHandler } from "./middlewares/errorHandler";
 const cookieParser = require("cookie-parser");
 
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors(
-  {
-    origin: process.env.CLIENT_URL,
-    credentials: true
-  }
-));
+const allowedOrigins = [
+  process.env.CLIENT_URL_DEV!,
+  process.env.CLIENT_URL_PROD!,
+];
+app.use(errorHandler);
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
 
 const io = new Server(server, {
-  cors: { origin: process.env.CLIENT_URL! }
+  cors: { origin: process.env.CLIENT_URL_DEV!} 
 });
 
 socketHandler(io);
