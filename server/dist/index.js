@@ -14,24 +14,13 @@ const errorHandler_1 = require("./middlewares/errorHandler");
 const cookieParser = require("cookie-parser");
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
-const allowedOrigins = [
-    "http://localhost:5173",
-    "https://a-realtime-to-do-app.onrender.com",
-];
 app.use(errorHandler_1.errorHandler);
 app.use((0, cors_1.default)({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        }
-        else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: "https://a-real-time-todo-app.onrender.com",
     credentials: true
 }));
 const io = new socket_io_1.Server(server, {
-    cors: { origin: "https://a-realtime-to-do-app.onrender.com" }
+    cors: { origin: "https://a-real-time-todo-app.onrender.com" }
 });
 (0, socketHandler_1.socketHandler)(io);
 app.use(cookieParser());

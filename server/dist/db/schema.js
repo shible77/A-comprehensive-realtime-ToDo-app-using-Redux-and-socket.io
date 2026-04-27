@@ -7,13 +7,17 @@ exports.users = (0, mysql_core_1.mysqlTable)('users', {
     username: (0, mysql_core_1.varchar)('username', { length: 255 }).notNull().unique(),
     email: (0, mysql_core_1.varchar)('email', { length: 255 }).notNull().unique(),
     password: (0, mysql_core_1.varchar)('password', { length: 255 }).notNull(),
-});
+}, (table) => ({
+    emailIdx: (0, mysql_core_1.index)('users_email_idx').on(table.email),
+}));
 exports.todos = (0, mysql_core_1.mysqlTable)('todos', {
     id: (0, mysql_core_1.int)('id').primaryKey().autoincrement(),
-    userId: (0, mysql_core_1.int)('user_id').notNull(),
+    userId: (0, mysql_core_1.int)('user_id').notNull().references(() => exports.users.id, { onDelete: 'cascade' }),
     title: (0, mysql_core_1.varchar)('title', { length: 255 }).notNull(),
     completed: (0, mysql_core_1.boolean)('completed').notNull().default(false),
-});
+}, (table) => ({
+    userIdIdx: (0, mysql_core_1.index)('todos_user_id_idx').on(table.userId),
+}));
 exports.otp = (0, mysql_core_1.mysqlTable)('otp', {
     id: (0, mysql_core_1.int)('id').primaryKey().autoincrement(),
     token: (0, mysql_core_1.varchar)('token', { length: 6 }).notNull(),

@@ -15,6 +15,20 @@
       "when": 1754597551823,
       "tag": "0001_magenta_wendell_rand",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1777314338365,
+      "tag": "0002_jazzy_captain_cross",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1777314628835,
+      "tag": "0003_awesome_zemo",
+      "breakpoints": true
     }
   ]
 }
