@@ -13,7 +13,7 @@ const server = http.createServer(app);
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://a-realtime-to-do-app.onrender.com",
+  "https://a-real-time-todo-app.onrender.com",
 ];
 app.use(errorHandler);
 app.use(cors({
