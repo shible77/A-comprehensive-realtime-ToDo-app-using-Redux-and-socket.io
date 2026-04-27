@@ -307,6 +307,8 @@ If you continue developing this project, strong next improvements would be:
 - [server/src/controllers/PasswordRecoveryController.ts](/c:/Users/user/Projects/To-Do%20list%20with%20Socket.io/server/src/controllers/PasswordRecoveryController.ts)
 - [server/src/db/schema.ts](/c:/Users/user/Projects/To-Do%20list%20with%20Socket.io/server/src/db/schema.ts)
 
-## License
+## Author and license
 
-No license file is currently included in the repository. Add one if you plan to publish or share the project publicly.
+**Md. Salauddin** — Full-stack engineer (backend-focused).
+
+This project is licensed under the **MIT License**.
