@@ -31,18 +31,19 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const res = await api.post("/auth/login", { email, password });
-      if (res.status === 204) {
+      if (res.data.status !== "success") {
         dispatch(
           showModal({
             title: "Login Failed",
-            message: "Incorrect email or password.",
+            message: res.data.message || "Incorrect email or password.",
             type: "error",
           })
         );
-      } else {
-        dispatch(setCredentials(res.data));
-        navigate("/");
+        return;
       }
+
+      dispatch(setCredentials(res.data));
+      navigate("/");
     } catch {
       dispatch(
         showModal({

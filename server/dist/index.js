@@ -10,18 +10,31 @@ const socket_io_1 = require("socket.io");
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const todoRoutes_1 = __importDefault(require("./routes/todoRoutes"));
 const socketHandler_1 = require("./sockets/socketHandler");
+const errorHandler_1 = require("./middlewares/errorHandler");
 const cookieParser = require("cookie-parser");
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://a-realtime-to-do-app.onrender.com",
+];
+app.use(errorHandler_1.errorHandler);
+app.use((0, cors_1.default)({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
+}));
 const io = new socket_io_1.Server(server, {
-    cors: { origin: process.env.CLIENT_URL }
+    cors: { origin: "https://a-realtime-to-do-app.onrender.com" }
 });
 (0, socketHandler_1.socketHandler)(io);
 app.use(cookieParser());
-app.use((0, cors_1.default)({
-    origin: process.env.CLIENT_URL,
-    credentials: true
-}));
 app.use(express_1.default.json());
 app.use((req, _, next) => { req.io = io; next(); });
 app.use("/api/auth", authRoutes_1.default);

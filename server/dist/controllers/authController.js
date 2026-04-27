@@ -30,7 +30,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const hashedPassword = yield argon2_1.default.hash(password);
         const alreadyExists = yield setup_1.db.select().from(schema_1.users).where((0, drizzle_orm_1.or)((0, drizzle_orm_1.eq)(schema_1.users.email, email), (0, drizzle_orm_1.eq)(schema_1.users.username, username)));
         if (alreadyExists.length > 0) {
-            return res.status(204).json({ message: "User already exists" });
+            return res.status(200).json({ message: "User already exists" });
         }
         const user = yield setup_1.db.insert(schema_1.users).values({ email, username, password: hashedPassword }).$returningId();
         return res.status(201).json({
@@ -55,17 +55,17 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = loginBodySchema.parse(req.body);
         const user = yield setup_1.db.select().from(schema_1.users).where((0, drizzle_orm_1.eq)(schema_1.users.email, email)).limit(1);
         if (user.length === 0) {
-            return res.status(204).json({ message: "User not found" });
+            return res.status(200).json({ message: "User not found" });
         }
         const isPasswordValid = yield argon2_1.default.verify(user[0].password, password);
         if (!isPasswordValid) {
-            return res.status(204).json({ message: "Invalid password" });
+            return res.status(200).json({ message: "Invalid password" });
         }
         const token = (0, jwt_1.generateToken)({ userId: user[0].id });
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
         });
         return res.status(200).json({
             status: "success",
@@ -85,7 +85,7 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.clearCookie("token", {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
         });
         return res.status(200).json({ status: "success" });
     }

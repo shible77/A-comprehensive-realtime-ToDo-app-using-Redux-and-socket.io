@@ -23,6 +23,7 @@ export const sendOTP = async (req: Request, res: Response) => {
         }
         const token = JSON.stringify(generateOTP())
         const otpStore = await db.insert(otp).values({token, userId : user[0].id}).$returningId()
+
         await sendVerificationEmail(email, token)
         return res
             .status(200)

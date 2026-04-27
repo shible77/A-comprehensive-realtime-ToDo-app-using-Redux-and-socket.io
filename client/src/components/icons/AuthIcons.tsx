@@ -44,6 +44,19 @@ export const LockIcon = createIcon(
   </>
 );
 
+export const UserIcon = createIcon(
+  <>
+    <circle cx="12" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.8" />
+    <path
+      d="M5 19C5.88 16.39 8.67 14.5 12 14.5C15.33 14.5 18.12 16.39 19 19"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </>
+);
+
 export const EyeIcon = createIcon(
   <>
     <path

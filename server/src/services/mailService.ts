@@ -2,9 +2,11 @@ const nodemailer = require('nodemailer');
 import dotenv  from 'dotenv';
 dotenv.config();
 
-export const sendVerificationEmail = (userEmail : string, verificationCode : string) => {
+export const sendVerificationEmail = async(userEmail : string, verificationCode : string) => {
     const config = {
-        service: 'gmail',
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
         auth: {
             user: process.env.EMAIL,
             pass: process.env.PASSWORD

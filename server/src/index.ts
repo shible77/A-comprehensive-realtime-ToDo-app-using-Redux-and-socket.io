@@ -12,8 +12,8 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
-  process.env.CLIENT_URL_DEV!,
-  process.env.CLIENT_URL_PROD!,
+  "http://localhost:5173",
+  "https://a-realtime-to-do-app.onrender.com",
 ];
 app.use(errorHandler);
 app.use(cors({
@@ -28,7 +28,7 @@ app.use(cors({
 }));
 
 const io = new Server(server, {
-  cors: { origin: process.env.CLIENT_URL_DEV!} 
+  cors: { origin: "https://a-realtime-to-do-app.onrender.com" } 
 });
 
 socketHandler(io);
